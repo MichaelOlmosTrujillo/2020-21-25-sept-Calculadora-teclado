@@ -1,0 +1,54 @@
+* {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+
+
+.calculadora {
+    width: 350px;
+    margin: 80px auto;
+}
+
+.numero {
+    border: 1px solid black;
+    border-radius: 10px;
+    margin: 5px 10px;
+    padding: 2px 4px;
+    text-align: center;
+    cursor: pointer;
+}
+
+
+.numeracion {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.letrasNumerosGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+
+}
+
+.pantalla {
+    border: solid 1px black;
+    margin: 5px;
+    padding: 12px;
+}
+
+.texto {
+    align-self: center;
+    padding-left: 10px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.estiloCalculadora {
+    text-align: end;
+    padding-right: 10px;
+}
