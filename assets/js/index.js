@@ -46,8 +46,9 @@ let objetoLetrasNum = {
   j: 10,
 };
 // console.log(objetoLetrasNum["b"]);
-
+//Contador de clicks
 let contador = 0;
+
 //Números anteriores que faltan en el arreglo: "arregloNumeros"
 let letAnteriores = [];
 let numAnteriores = [];
@@ -77,7 +78,6 @@ function verificarNumAnteriores(numero) {
       const anterioresOrd = arregloNumeros.sort();
       const tamano = anterioresOrd.length;
       const maxValue = anterioresOrd[tamano - 1];
-      faltanAnteriores = true;
       for (let i = 1; i < 10 - maxValue; i++) {
         numAnteriores.push(maxValue + i);
       }
@@ -100,27 +100,32 @@ function verificarNumAnteriores(numero) {
 
 function verificarletrasAnteriores(letra) {
   let faltanAnteriores = false;
-
-  if (arregloLetras.length != 0) {
+  if (arregloLetras.length == 0 && letra == "a") {
+  } else if (arregloLetras.length != 0) {
     const anterioresOrd = arregloLetras.sort();
     const tamano = anterioresOrd.length;
     const maxValue = anterioresOrd[tamano - 1];
-    faltanAnteriores = true;
     for (
-      let i = 1;
+      let i = 0;
       i < objetoLetrasNum[letra] - objetoLetrasNum[maxValue];
       i++
     ) {
-      letAnteriores.push(objetoNumLetras[objetoLetrasNum[maxValue] + i]);
+      letAnteriores.push(objetoNumLetras[objetoLetrasNum[maxValue] + i + 1]);
+    }
+    if (letAnteriores.length != 0) {
+      faltanAnteriores = true;
     }
   } else {
     for (let i = 1; i < objetoLetrasNum[letra]; i++) {
       letAnteriores.push(objetoNumLetras[i]);
     }
+    faltanAnteriores = true;
   }
+
   return faltanAnteriores;
 }
-
+// arregloLetras = [];
+// console.log(verificarletrasAnteriores("a"));
 // arregloLetras = ["a", "b", "c"];
 // console.log(letAnteriores, verificarletrasAnteriores("e"));
 
@@ -175,28 +180,58 @@ function agregarNumero(numero) {
 // console.log(arregloNumeros);
 
 function agregarLetra(letra) {
-  let existe = false;
+  let yaExiste = false;
   //verificar anteriores
-  const faltanAnteriores = verificarletrasAnteriores(letra);
-
-  if (arregloLetras.length == 0) {
-    arregloLetras.push(letra);
-  } else if (arregloLetras.length == 10) {
-    existe = true;
-    //Bloquear todas la teclas para que no escriban más números
-  } else {
-    for (let i = 0; i < arregloLetras.length; i++) {
-      if (arregloLetras[i] == letra) {
-        existe = true;
-        // swal(arregloLetras[i] + " Ya está registrada escribe otra");
-      }
-    }
-    if (!existe) {
+  let faltanAnteriores = verificarletrasAnteriores(letra);
+  // console.log(numAnteriores);
+  // console.log(numAnteriores);
+  // console.log(numAnteriores.length);
+  if (!faltanAnteriores) {
+    if (arregloLetras.length == 0 && letra == "a") {
       arregloLetras.push(letra);
+    } else if (arregloLetras.length != 0 && letra == "a") {
+      yaExiste = true;
+    } else if (arregloLetras.length != 0 && letra != "a") {
+      for (let i = 0; i < arregloLetras.length; i++) {
+        if (arregloLetras[i] == letra) {
+          yaExiste = true;
+          // swal(arregloLetras[i] + " Ya está registrado escribe otro");
+        }
+      }
+      // console.log(!yaExiste);
+
+      if (!yaExiste && letAnteriores.length == 0) {
+        arregloLetras.push(letra);
+      }
+
+      /* En el listener se considera el caso  en que el número no exista y la diferencia "numero - numAnteriores.length != 1". Como es diferente de 1 indica que hay número anteriores a él que no se han registrado, entonces toca lanzar un sweet alert
+       */
+    } else if (arregloLetras.length == 10) {
+      // swal('Todos los números están registrados');
+      yaExiste = true;
     }
+  } else {
+    console.log("Falta agregar las letras " + letAnteriores);
   }
-  return existe;
+
+  return yaExiste;
 }
+// arregloLetras = [];
+// // agregarLetra("a");
+// // console.log(arregloLetras);
+// console.log(verificarletrasAnteriores("a"));
+// console.log(agregarLetra("a"));
+// console.log(arregloLetras);
+// arregloLetras = ["a", "b", "c"];
+// verificarletrasAnteriores("d");
+// console.log(letAnteriores);
+// console.log(arregloLetras);
+// console.log(agregarLetra("f"));
+// console.log(letAnteriores);
+// console.log(arregloLetras);
+
+// console.log(letAnteriores, verificarletrasAnteriores("e"));
+
 function llenarEspacio(numero, letra) {
   const existeNumero = agregarNumero(numero);
   const esLetra = "letra";
@@ -205,25 +240,57 @@ function llenarEspacio(numero, letra) {
     return esNumero;
   } else if (existeNumero) {
     agregarLetra(letra);
+    console.log(agregarLetra(letra));
+    console.log(arregloLetras);
+    return esLetra;
+  } else if (agregarLetra(letra)) {
+    swal("Ya está registrada la letra " + letra);
     return esLetra;
   }
 }
+
 a1.addEventListener("click", () => {
   contador += 1;
-  let a = "1";
-  let uno = 1;
-  const espacio = llenarEspacio(1, "a");
+  if (arregloNumeros.length < 10) {
+    if (numAnteriores.length == 0) {
+      agregarNumero(1);
+    } else {
+      swal('Ya está registrado el "1!');
+    }
+  } else if (arregloNumeros.length == 10) {
+    swal("Ya están registrados todos los números");
+  }
+  // const espacio = llenarEspacio(1, "a");
+  // if (espacio == "numero") {
+  //   numerosPantalla.innerHTML += 1 + ", ";
+  //   //Falta poner que hace falta los números anteriores
+  // } else if (espacio == "letra" && contador == 2) {
+  //   letrasPantalla.innerHTML += "a" + ", ";
+  //   // contador = 0;
+  //   //Falta poner que hace falta las letras anteriores
+  // } else if (espacio == "letra" && contador >= 3) {
+  //   swal('Ya está registrada la letra "a"');
+  // } else if (arregloLetras.length == 10) {
+  //   swal("Todos los números y letras ya están registrados");
+  // }
+});
+
+b2.addEventListener("click", () => {
+  contador += 1;
+  const espacio = llenarEspacio(2, "b");
   if (espacio == "numero") {
-    numerosPantalla.innerHTML += 1 + ", ";
+    numerosPantalla.innerHTML += 2 + ", ";
     //Falta poner que hace falta los números anteriores
   } else if (espacio == "letra" && contador == 2) {
-    letrasPantalla.innerHTML += "a" + ", ";
+    letrasPantalla.innerHTML += "b" + ", ";
+    // contador = 0;
     //Falta poner que hace falta las letras anteriores
+  } else if (espacio == "letra" && contador >= 3) {
+    swal('Ya está registrada la letra "b"');
   } else if (arregloLetras.length == 10) {
     swal("Todos los números y letras ya están registrados");
   }
 });
-
 // letrasPantalla.innerHTML += 'a' + ', ';
 
 // const letras = ["b", "a", "c", "f", "d"];
